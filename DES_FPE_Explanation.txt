@@ -1,0 +1,36 @@
+Logic:
+Running encyption/decryption until we get number in-range i.e. num<1000000.Calling 16-rounded DES in loop until we get final output<1000000.
+95% outputs come in-range so
+DES Round-1 --->4.4% need second round
+DES Round-2 --->0.2% need third round
+DES Round-3 --->0.008% need fourth round
+DES Round-4 --->0.0005% need fifth round and so on....
+So we might require at max 4 iterations to get output<1000000, avg 2 rounds.
+
+Encryption:
+Before encryption adding tweak to it( to eliminate dictionary formation)
+if after adding tweak ,number>1000000 then doing num(mod1000000).
+
+Decryption:
+After decryption if num>=tweak then num=num-tweak
+else if num<tweak then adding 1000000 to num and sub tweak.(reverse process of above)
+
+DES:
+Function Fk:
+Input to DES is 20bit long,
+Left-10bit and right-10bit
+Operations on right half:
+i.Appending 22 '0' to right half to make it 32 bit, 
+ii.passing to expansion logic , 
+iii.xoring 48bit right half with 48 bit key, 
+iv.compressing 48bit right half to 10 bit by using s-boxes in loop
+   round1. 48bit to 32 bit
+   round2. 32bit -remove last 2 bits and store them, 30bit to 20bit
+   round3. 20bit -remove last 2 bits and store them, 18bit to 12bit
+   round4. 12bit-8bit
+   round5. 8bit -remove last 2bits and store them, 6bit to 4bit
+   4bit+appending 2bit(from round2)+2bit(from round3)+2bit(from round5)=10bit
+Xoring right half and left half, store right half in left and xored result in right --repeat for 16 rounds.
+Swap right and left at end of 16 rounds.
+
+Not doing initial and final permutation ,as input is only 20bit, instead adding tweak to introduce randomness.
